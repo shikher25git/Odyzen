@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Torii gate silhouette — flat ink-brush style -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Top beam (kasagi) — slightly curved -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M16,40 Q100,28 184,40 L184,50 Q100,38 16,50 Z" />
+
+    <!-- Second beam (nuki) -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M30,60 L170,60 L170,68 L30,68 Z" />
+
+    <!-- Left pillar -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M38,40 L50,40 L52,190 L36,190 Z" />
+
+    <!-- Right pillar -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M150,40 L162,40 L164,190 L148,190 Z" />
+
+    <!-- Center vertical tab (gakuzuka) -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M96,50 L104,50 L104,60 L96,60 Z" />
+</vector>

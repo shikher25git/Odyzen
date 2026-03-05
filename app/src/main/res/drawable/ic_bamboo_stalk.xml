@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bamboo stalk — 3 segments with nodes -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Bottom segment -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M94,200 L94,140 Q100,136 106,140 L106,200 Z" />
+
+    <!-- Bottom node -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M90,140 Q100,132 110,140 Q100,144 90,140 Z" />
+
+    <!-- Middle segment -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M94,140 L95,80 Q100,76 105,80 L106,140 Z" />
+
+    <!-- Middle node -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M91,80 Q100,72 109,80 Q100,84 91,80 Z" />
+
+    <!-- Top segment -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M95,80 L96,20 Q100,16 104,20 L105,80 Z" />
+
+    <!-- Top node -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M92,20 Q100,12 108,20 Q100,24 92,20 Z" />
+
+    <!-- Leaf (right, from middle node) -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M108,78 Q140,50 150,30 Q138,56 110,76 Z" />
+
+    <!-- Leaf (left, from top node) -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M93,22 Q62,0 50,0 Q66,6 92,18 Z" />
+</vector>

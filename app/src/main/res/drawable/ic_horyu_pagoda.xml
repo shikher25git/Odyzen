@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hōryū-ji pagoda silhouette — ink-brush flat style -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Five-story pagoda silhouette -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="
+            M100,8 L96,22 L68,22 L64,28 L136,28 L132,22 L104,22 Z
+            M100,28 L94,38 L58,38 L54,44 L146,44 L142,38 L106,38 Z
+            M100,44 L92,56 L48,56 L44,62 L156,62 L152,56 L108,56 Z
+            M100,62 L90,76 L38,76 L34,82 L166,82 L162,76 L110,76 Z
+            M100,82 L86,100 L28,100 L24,108 L176,108 L172,100 L114,100 Z
+            M92,108 L92,180 L108,180 L108,108 Z
+            M80,180 L120,180 L122,192 L78,192 Z" />
+
+    <!-- Central spire -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="M99,2 L101,2 L101,10 L99,10 Z" />
+</vector>

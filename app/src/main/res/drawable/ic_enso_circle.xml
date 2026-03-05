@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ensō circle — single brushstroke, intentional gap -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Single open brushstroke circle with taper -->
+    <path
+        android:fillColor="#3B1F0E"
+        android:pathData="
+            M90,28
+            C50,30 18,62 18,100
+            C18,142 52,176 100,176
+            C148,176 182,142 182,100
+            C182,62 154,34 120,30
+            L118,42
+            C146,46 168,68 168,100
+            C168,134 140,162 100,162
+            C60,162 32,134 32,100
+            C32,68 56,44 88,40
+            Z" />
+</vector>
