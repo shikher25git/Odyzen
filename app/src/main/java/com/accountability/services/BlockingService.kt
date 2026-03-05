@@ -72,8 +72,13 @@ class BlockingService : AccessibilityService() {
                         }
 
                         if (usedMinutes >= blockedApp.limitMinutes) {
+                            // Hard block: kick to home screen FIRST so the blocked
+                            // app is no longer visible or in the foreground task
+                            performGlobalAction(GLOBAL_ACTION_HOME)
+                            kotlinx.coroutines.delay(300) // Let home screen render
+
                             val intent = Intent(applicationContext, UnlockActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.putExtra("PACKAGE_NAME", packageName)
                             startActivity(intent)
                             
