@@ -9,14 +9,16 @@ import com.accountability.ui.UnlockActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.first
 
 class BlockingService : AccessibilityService() {
 
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val supervisorJob = SupervisorJob()
+    private val serviceScope = CoroutineScope(supervisorJob + Dispatchers.IO)
     private lateinit var database: AppDatabase
     private var monitoringJob: kotlinx.coroutines.Job? = null
     private var currentPackage: String? = null
@@ -44,20 +46,24 @@ class BlockingService : AccessibilityService() {
 
     private fun startMonitoring(packageName: String) {
         monitoringJob = serviceScope.launch {
-            // Observe the Rule (Limit) for changes
-            // distinctUntilChanged ensures we don't restart the loop if only 'usedMinutes' changes
+            // Quick check: does this app even have a blocking rule?
+            // If not, exit immediately — no polling, no battery drain
+            val rule = database.appDao().getBlockedAppFlow(packageName).first()
+            if (rule == null) return@launch
+
+            // Observe the Rule for changes
             database.appDao().getBlockedAppFlow(packageName)
                 .distinctUntilChanged { old, new -> 
                     old?.limitMinutes == new?.limitMinutes && old?.packageName == new?.packageName 
                 }
                 .collectLatest { blockedApp ->
                     if (blockedApp == null) {
-                        // Rule deleted or doesn't exist
+                        // Rule deleted — stop monitoring entirely
                         return@collectLatest
                     }
 
-                    // Loop for Usage Checking (with the valid limit)
-                    while (kotlinx.coroutines.currentCoroutineContext().isActive) {
+                    // Polling loop — only runs while this app is in the foreground
+                    while (kotlinx.coroutines.currentCoroutineContext()[kotlinx.coroutines.Job]?.isActive == true) {
                         if (BlockingManager.isUnlocked(packageName)) {
                             kotlinx.coroutines.delay(30000) 
                             continue
@@ -66,16 +72,15 @@ class BlockingService : AccessibilityService() {
                         val usageMillis = com.accountability.core.SystemUtils.getUsageForApp(applicationContext, packageName)
                         val usedMinutes = (usageMillis / 60000).toInt()
 
-                        // Update DB if usage changed (this won't trigger re-collection due to distinctUntilChanged)
+                        // Update DB if usage changed
                         if (usedMinutes != blockedApp.usedMinutes) {
                              database.appDao().insertBlockedApp(blockedApp.copy(usedMinutes = usedMinutes))
                         }
 
                         if (usedMinutes >= blockedApp.limitMinutes) {
-                            // Hard block: kick to home screen FIRST so the blocked
-                            // app is no longer visible or in the foreground task
+                            // Hard block: kick to home screen FIRST
                             performGlobalAction(GLOBAL_ACTION_HOME)
-                            kotlinx.coroutines.delay(300) // Let home screen render
+                            kotlinx.coroutines.delay(300)
 
                             val intent = Intent(applicationContext, UnlockActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -93,4 +98,10 @@ class BlockingService : AccessibilityService() {
     }
 
     override fun onInterrupt() {}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Clean up all coroutines to prevent leaks
+        supervisorJob.cancel()
+    }
 }
